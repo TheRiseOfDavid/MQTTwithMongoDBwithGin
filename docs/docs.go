@@ -64,7 +64,7 @@ const docTemplate = `{
         },
         "/Chat/AddSensativeWord/": {
             "post": {
-                "description": "新增敏感詞，且用 詞+作用域 來表達完整性 (primary key)",
+                "description": "新增敏感詞，且用 詞+作用域 來表達完整性 (primary key) \\n ` + "`" + `apply_to` + "`" + ` 目前只對 all 有反應，因此使用 all + 敏感詞即可。 其中 policy 提供兩個方法，replace 則必須在提供 replacement 來供應需要替換的敏感詞字串；obfuscate 則程式自動給出 ***",
                 "consumes": [
                     "application/json"
                 ],
@@ -245,8 +245,8 @@ var SwaggerInfo = &swag.Spec{
 	Host:             "localhost:8080",
 	BasePath:         "/",
 	Schemes:          []string{},
-	Title:            "新人測試 MQTT + MongoDB 基本操作",
-	Description:      "熟悉 Swagger 文件自動生成方式，以及輸入與輸出資料格式定義方式",
+	Title:            "使用 MQTTX 聊天，並過濾敏感字",
+	Description:      "使用 MQTT(websocket) + MongoDB 基本操作",
 	InfoInstanceName: "swagger",
 	SwaggerTemplate:  docTemplate,
 	LeftDelim:        "{{",
