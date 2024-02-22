@@ -1,0 +1,155 @@
+basePath: /
+definitions:
+  controller.HttpObj:
+    properties:
+      error:
+        type: string
+      msg:
+        type: string
+      success:
+        type: string
+    type: object
+  controller.UserAnalyticsObj:
+    properties:
+      count:
+        type: string
+      message:
+        type: string
+      sender:
+        type: string
+    type: object
+  models.SensativeWords:
+    properties:
+      apply_to:
+        description: 這兩個已經做移除
+        type: string
+      gender:
+        type: string
+      policy:
+        type: string
+      replacement:
+        type: string
+      sensative_words:
+        description: 這兩個已經做移除
+        type: string
+    required:
+    - apply_to
+    - sensative_words
+    type: object
+externalDocs:
+  description: OpenAPI
+  url: https://swagger.io/resources/open-api/
+host: localhost:8080
+info:
+  contact:
+    email: support@swagger.io
+    name: API Support
+    url: http://www.swagger.io/support
+  description: 熟悉 Swagger 文件自動生成方式，以及輸入與輸出資料格式定義方式
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: http://swagger.io/terms/
+  title: 新人測試 MQTT + MongoDB 基本操作
+  version: "1.0"
+paths:
+  /Chat/:
+    get:
+      consumes:
+      - application/json
+      description: 輸入他的對話，並將敏感詞移除
+      parameters:
+      - description: 對話文字
+        in: query
+        name: message
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controller.HttpObj'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controller.HttpObj'
+      summary: 輸入他的對話，並將敏感詞移除
+      tags:
+      - 聊天
+  /Chat/AddSensativeWord/:
+    post:
+      consumes:
+      - application/json
+      description: 新增敏感詞，且用 詞+作用域 來表達完整性 (primary key)
+      parameters:
+      - description: 敏感詞的 object
+        in: body
+        name: sensative_word
+        required: true
+        schema:
+          $ref: '#/definitions/models.SensativeWords'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.SensativeWords'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controller.HttpObj'
+      summary: 新增敏感詞
+      tags:
+      - 聊天
+  /Chat/Analytics/:
+    get:
+      consumes:
+      - application/json
+      description: 輸出每個人的敏感詞使用紀錄
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controller.UserAnalyticsObj'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controller.HttpObj'
+      summary: 輸出每個人的敏感詞使用紀錄
+      tags:
+      - 聊天
+  /Chat/DeleteSensativeWord/:
+    post:
+      consumes:
+      - application/json
+      description: 刪除敏感詞，且用 詞+作用域 來表達唯一性 (primary key)
+      parameters:
+      - description: 敏感詞的 object
+        in: body
+        name: sensative_word
+        required: true
+        schema:
+          $ref: '#/definitions/models.SensativeWords'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.SensativeWords'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controller.HttpObj'
+      summary: 刪除敏感詞
+      tags:
+      - 聊天
+securityDefinitions:
+  BasicAuth:
+    type: basic
+swagger: "2.0"

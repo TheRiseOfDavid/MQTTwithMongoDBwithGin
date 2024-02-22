@@ -1,0 +1,234 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "熟悉 Swagger 文件自動生成方式，以及輸入與輸出資料格式定義方式",
+        "title": "新人測試 MQTT + MongoDB 基本操作",
+        "termsOfService": "http://swagger.io/terms/",
+        "contact": {
+            "name": "API Support",
+            "url": "http://www.swagger.io/support",
+            "email": "support@swagger.io"
+        },
+        "license": {
+            "name": "Apache 2.0",
+            "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+        },
+        "version": "1.0"
+    },
+    "host": "localhost:8080",
+    "basePath": "/",
+    "paths": {
+        "/Chat/": {
+            "get": {
+                "description": "輸入他的對話，並將敏感詞移除",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "聊天"
+                ],
+                "summary": "輸入他的對話，並將敏感詞移除",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "對話文字",
+                        "name": "message",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/controller.HttpObj"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/controller.HttpObj"
+                        }
+                    }
+                }
+            }
+        },
+        "/Chat/AddSensativeWord/": {
+            "post": {
+                "description": "新增敏感詞，且用 詞+作用域 來表達完整性 (primary key)",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "聊天"
+                ],
+                "summary": "新增敏感詞",
+                "parameters": [
+                    {
+                        "description": "敏感詞的 object",
+                        "name": "sensative_word",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.SensativeWords"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.SensativeWords"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/controller.HttpObj"
+                        }
+                    }
+                }
+            }
+        },
+        "/Chat/Analytics/": {
+            "get": {
+                "description": "輸出每個人的敏感詞使用紀錄",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "聊天"
+                ],
+                "summary": "輸出每個人的敏感詞使用紀錄",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/controller.UserAnalyticsObj"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/controller.HttpObj"
+                        }
+                    }
+                }
+            }
+        },
+        "/Chat/DeleteSensativeWord/": {
+            "post": {
+                "description": "刪除敏感詞，且用 詞+作用域 來表達唯一性 (primary key)",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "聊天"
+                ],
+                "summary": "刪除敏感詞",
+                "parameters": [
+                    {
+                        "description": "敏感詞的 object",
+                        "name": "sensative_word",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.SensativeWords"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.SensativeWords"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/controller.HttpObj"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "controller.HttpObj": {
+            "type": "object",
+            "properties": {
+                "error": {
+                    "type": "string"
+                },
+                "msg": {
+                    "type": "string"
+                },
+                "success": {
+                    "type": "string"
+                }
+            }
+        },
+        "controller.UserAnalyticsObj": {
+            "type": "object",
+            "properties": {
+                "count": {
+                    "type": "string"
+                },
+                "message": {
+                    "type": "string"
+                },
+                "sender": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.SensativeWords": {
+            "type": "object",
+            "required": [
+                "apply_to",
+                "sensative_words"
+            ],
+            "properties": {
+                "apply_to": {
+                    "description": "這兩個已經做移除",
+                    "type": "string"
+                },
+                "gender": {
+                    "type": "string"
+                },
+                "policy": {
+                    "type": "string"
+                },
+                "replacement": {
+                    "type": "string"
+                },
+                "sensative_words": {
+                    "description": "這兩個已經做移除",
+                    "type": "string"
+                }
+            }
+        }
+    },
+    "securityDefinitions": {
+        "BasicAuth": {
+            "type": "basic"
+        }
+    },
+    "externalDocs": {
+        "description": "OpenAPI",
+        "url": "https://swagger.io/resources/open-api/"
+    }
+}
